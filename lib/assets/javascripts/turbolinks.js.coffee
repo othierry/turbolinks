@@ -10,6 +10,8 @@ referer                 = null
 
 xhr                     = null
 
+container               = 'body'
+
 EVENTS =
   BEFORE_CHANGE:  'page:before-change'
   FETCH:          'page:fetch'
@@ -20,6 +22,9 @@ EVENTS =
   RESTORE:        'page:restore'
   BEFORE_UNLOAD:  'page:before-unload'
   EXPIRE:         'page:expire'
+
+setContainer = (containerSelector = container) ->
+  container = containerSelector
 
 fetch = (url) ->
   url = new ComponentUrl url
@@ -123,7 +128,9 @@ constrainPageCacheTo = (limit) ->
 changePage = (title, body, csrfToken, runScripts) ->
   triggerEvent EVENTS.BEFORE_UNLOAD
   document.title = title
-  document.documentElement.replaceChild body, document.body
+  old_container = document.body.querySelector container
+  new_container = body.querySelector container
+  document.body.replaceChild new_container, old_container
   CSRFToken.update csrfToken if csrfToken?
   setAutofocusElement()
   executeScriptTags() if runScripts
@@ -553,6 +560,7 @@ else
 #   Turbolinks.supported
 #   Turbolinks.EVENTS
 @Turbolinks = {
+  setContainer,
   visit,
   pagesCached,
   enableTransitionCache,
