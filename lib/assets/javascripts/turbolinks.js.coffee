@@ -102,7 +102,7 @@ cacheCurrentPage = ->
 
   pageCache[currentStateUrl.absolute] =
     url:                      currentStateUrl.relative,
-    body:                     document.body,
+    body:                     document.body.cloneNode(true)
     title:                    document.title,
     positionY:                window.pageYOffset,
     positionX:                window.pageXOffset,
@@ -138,6 +138,7 @@ changePage = (title, body, csrfToken, runScripts) ->
   progressBar?.done()
   triggerEvent EVENTS.CHANGE
   triggerEvent EVENTS.UPDATE
+
 
 executeScriptTags = ->
   scripts = Array::slice.call document.body.querySelectorAll 'script:not([data-turbolinks-eval="false"])'
@@ -560,6 +561,7 @@ else
 #   Turbolinks.supported
 #   Turbolinks.EVENTS
 @Turbolinks = {
+  pageCache,
   setContainer,
   visit,
   pagesCached,
