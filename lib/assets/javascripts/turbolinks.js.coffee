@@ -130,7 +130,10 @@ changePage = (title, body, csrfToken, runScripts) ->
   document.title = title
   old_container = document.body.querySelector container
   new_container = body.querySelector container
-  document.body.replaceChild new_container, old_container
+  if old_container and new_container
+    document.body.replaceChild new_container, old_container
+  else
+    document.documentElement.replaceChild body, document.body
   CSRFToken.update csrfToken if csrfToken?
   setAutofocusElement()
   executeScriptTags() if runScripts
